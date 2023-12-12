@@ -146,6 +146,24 @@ function randomColor() {
 }
 
 export default function Home() {
+  const [messages, setMessages] = useState([
+    {
+      id: "1",
+      data: "This is a test message!",
+      member: {
+        id: "1",
+        clientData: {
+          color: "blue",
+          username: "bluemoon",
+        },
+      },
+    },
+  ]);
+  const [me, setMe] = useState({
+    username: randomName(),
+    color: randomColor(),
+  });
+
   return (
     <>
       <Head>
@@ -155,7 +173,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.app}>
-        <div className={styles.appContent}></div>
+        <div className={styles.appContent}>
+          <Messages messages={messages} me={me} />
+        </div>
       </main>
     </>
   );
