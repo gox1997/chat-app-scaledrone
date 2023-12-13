@@ -19,8 +19,8 @@ export default function Messages({ messages, me }) {
 
 function Message({ member, data, id }, me) {
   // 1
-  const { username, color } = member.clientData;
-  // 2
+  const { username, color } =
+    member && member.clientData ? member.clientData : {}; // 2
   const messageFromMe = member.id === me.id;
   const className = messageFromMe
     ? `${styles.messagesMessage} ${styles.currentMember}`
