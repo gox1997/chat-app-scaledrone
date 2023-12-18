@@ -150,20 +150,8 @@ function randomColor() {
 let drone = null;
 
 export default function Home() {
-    const [messages, setMessages] = useState([
-        {
-            id: "1",
-            data: "This is a test message!",
-            member: {
-                id: "1",
-                clientData: {
-                    color: "blue",
-                    username: "bluemoon",
-                },
-            },
-        },
-    ]);
-
+    const [messages, setMessages] = useState([]);
+    const [members, setMembers] = useState([]);
     const [me, setMe] = useState({
         username: randomName(),
         color: randomColor(),
@@ -176,16 +164,6 @@ export default function Home() {
     const meRef = useRef();
     meRef.current = me;
 
-    const [members, setMembers] = useState([
-        {
-            id: "1",
-            clientData: {
-                color: "blue",
-                username: "bluemoon",
-            },
-        },
-    ]);
-
     function connectToScaledrone() {
         drone = new window.Scaledrone("qHUySD8DwfBtRW3E", {
             data: meRef.current,
@@ -197,14 +175,38 @@ export default function Home() {
             meRef.current.id = drone.clientId;
             setMe(meRef.current);
         });
+
+        const room = drone.subscribe("observable-room");
+
+        room.on("message", (message) => {
+            const { data, member } = message;
+            setMessages([...messagesRef.current, message]);
+        });
+        room.on("members", (members) => {
+            setMembers(members);
+        });
+        room.on("member_join", (member) => {
+            setMembers([...membersRef.current, member]);
+        });
+        room.on("member_leave", ({ id }) => {
+            const index = membersRef.current.findIndex((m) => m.id === id);
+            const newMembers = [...membersRef.current];
+            newMembers.splice(index, 1);
+            setMembers(newMembers);
+        });
     }
 
+    useEffect(() => {
+        if (drone === null) {
+            connectToScaledrone();
+        }
+    }, []);
+
     function onSendMessage(message) {
-        const newMessage = {
-            data: message,
-            member: me,
-        };
-        setMessages([...messages, newMessage]);
+        drone.publish({
+            room: "observable-room",
+            message,
+        });
     }
 
     return (
