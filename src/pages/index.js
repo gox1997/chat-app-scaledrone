@@ -181,7 +181,13 @@ export default function Home() {
 
         room.on("message", (message) => {
             const { data, member } = message;
-            setMessages([...messagesRef.current, message]);
+            if (typeof data === "object" && typeof data.typing === "boolean") {
+                const m = membersRef.current.find((m) => m.id === member.id);
+                m.typing = data.typing;
+                setMembers(membersRef.current);
+            } else {
+                setMessages([...messagesRef.current, message]);
+            }
         });
         room.on("members", (members) => {
             setMembers(members);
@@ -207,6 +213,13 @@ export default function Home() {
         drone.publish({
             room: "observable-room",
             message,
+        });
+    }
+
+    function onChangeTypingState(isTyping) {
+        drone.publish({
+            room: "observable-room",
+            message: { typing: isTyping },
         });
     }
 
