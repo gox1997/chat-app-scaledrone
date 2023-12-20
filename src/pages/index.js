@@ -5,6 +5,7 @@ import Messages from "@/components/Messages";
 import { useState, useEffect, useRef } from "react";
 import Input from "@/components/Input";
 import Members from "@/components/Members";
+import TypingIndicator from "@/components/TypingIndicator";
 
 function randomName() {
     const adjectives = [
@@ -228,7 +229,15 @@ export default function Home() {
                 <div className={styles.appContent}>
                     <Members members={members} me={me} />
                     <Messages messages={messages} me={me} />
-                    <Input onSendMessage={onSendMessage} />
+                    <TypingIndicator
+                        members={members.filter(
+                            (m) => m.typing && m.id !== me.id
+                        )}
+                    />
+                    <Input
+                        onSendMessage={onSendMessage}
+                        onChangeTypingState={onChangeTypingState}
+                    />
                 </div>
             </main>
         </>
