@@ -5,6 +5,7 @@ import Script from "next/script";
 import { useState, useEffect, useRef } from "react";
 
 import Messages from "@/components/Messages";
+import Input from "@/components/Input";
 
 function randomName() {
     const adjectives = [
@@ -165,6 +166,13 @@ export default function Home() {
         username: randomName(),
         color: randomColor(),
     });
+    function onSendMessage(message) {
+        const newMessage = {
+            data: message,
+            member: me,
+        };
+        setMessages([...messages, newMessage]);
+    }
     return (
         <>
             <Head>
@@ -179,6 +187,7 @@ export default function Home() {
             <main className={styles.app}>
                 <div className={styles.appContent}>
                     <Messages messages={messages} me={me} />
+                    <Input onSendMessage={onSendMessage} />
                 </div>
             </main>
         </>
