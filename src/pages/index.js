@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 
 import Messages from "@/components/Messages";
 import Input from "@/components/Input";
+import Members from "@/components/Members";
 
 function randomName() {
     const adjectives = [
@@ -162,6 +163,15 @@ export default function Home() {
             },
         },
     ]);
+    const [members, setMembers] = useState([
+        {
+            id: "1",
+            clientData: {
+                color: "blue",
+                username: "bluemoon",
+            },
+        },
+    ]);
     const [me, setMe] = useState({
         username: randomName(),
         color: randomColor(),
@@ -186,6 +196,7 @@ export default function Home() {
             </Head>
             <main className={styles.app}>
                 <div className={styles.appContent}>
+                    <Members members={members} me={me} />
                     <Messages messages={messages} me={me} />
                     <Input onSendMessage={onSendMessage} />
                 </div>
