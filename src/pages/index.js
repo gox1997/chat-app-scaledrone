@@ -177,7 +177,9 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <main className={styles.app}>
-                <div className={styles.appContent}></div>
+                <div className={styles.appContent}>
+                    <Messages messages={messages} me={me} />
+                </div>
             </main>
         </>
     );
