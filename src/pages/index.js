@@ -149,6 +149,8 @@ function randomColor() {
     return "#" + Math.floor(Math.random() * 0xffffff).toString(16);
 }
 
+let drone = null;
+
 export default function Home() {
     const [messages, setMessages] = useState([
         {
@@ -176,6 +178,50 @@ export default function Home() {
         username: randomName(),
         color: randomColor(),
     });
+
+    const messagesRef = useRef();
+    messagesRef.current = messages;
+    const membersRef = useRef();
+    membersRef.current = members;
+    const meRef = useRef();
+    meRef.current = me;
+
+    function connectToScaledrone() {
+        drone = new window.Scaledrone("wMwEaeb0Gwobql4o", {
+            data: meRef.current,
+        });
+        drone.on("open", (error) => {
+            if (error) {
+                return console.error(error);
+            }
+            meRef.current.id = drone.clientId;
+            setMe(meRef.current);
+        });
+
+        const room = drone.subscribe("observable-room");
+        room.on("message", (message) => {
+            const { data, member } = message;
+            setMessages([...messagesRef.current, message]);
+        });
+        room.on("members", (members) => {
+            setMembers(members);
+        });
+        room.on("member_join", (member) => {
+            setMembers([...membersRef.current, member]);
+        });
+        room.on("member_leave", ({ id }) => {
+            const index = membersRef.current.findIndex((m) => m.id === id);
+            const newMembers = [...membersRef.current];
+            newMembers.splice(index, 1);
+            setMembers(newMembers);
+        });
+    }
+    useEffect(() => {
+        if (drone === null) {
+            connectToScaledrone();
+        }
+    }, []);
+
     function onSendMessage(message) {
         const newMessage = {
             data: message,
@@ -193,6 +239,10 @@ export default function Home() {
                     content="width=device-width, initial-scale=1"
                 />
                 <link rel="icon" href="/favicon.ico" />
+                <script
+                    type="text/javascript"
+                    src="https://cdn.scaledrone.com/scaledrone.min.js"
+                />
             </Head>
             <main className={styles.app}>
                 <div className={styles.appContent}>
