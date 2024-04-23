@@ -217,13 +217,14 @@ export default function Home() {
                     name="viewport"
                     content="width=device-width, initial-scale=1"
                 />
+                <script
+                    type="text/javascript"
+                    src="https://cdn.scaledrone.com/scaledrone.min.js"
+                    async
+                />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <script
-                type="text/javascript"
-                src="https://cdn.scaledrone.com/scaledrone.min.js"
-                async
-            />
+
             <main className={styles.app}>
                 <div className={styles.appContent}>
                     <Members members={members} me={me} />
