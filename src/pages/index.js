@@ -218,10 +218,10 @@ export default function Home() {
                     content="width=device-width, initial-scale=1"
                 />
                 <link rel="icon" href="/favicon.ico" />
-                <script
+                <scrip
                     type="text/javascript"
                     src="https://cdn.scaledrone.com/scaledrone.min.js"
-                /></script>
+                />
             </Head>
             <main className={styles.app}>
                 <div className={styles.appContent}>
