@@ -152,28 +152,8 @@ function randomColor() {
 let drone = null;
 
 export default function Home() {
-    const [messages, setMessages] = useState([
-        {
-            id: "1",
-            data: "This is a test message!",
-            member: {
-                id: "1",
-                clientData: {
-                    color: "blue",
-                    username: "bluemoon",
-                },
-            },
-        },
-    ]);
-    const [members, setMembers] = useState([
-        {
-            id: "1",
-            clientData: {
-                color: "blue",
-                username: "bluemoon",
-            },
-        },
-    ]);
+    const [messages, setMessages] = useState([]);
+    const [members, setMembers] = useState([]);
     const [me, setMe] = useState({
         username: randomName(),
         color: randomColor(),
@@ -223,11 +203,10 @@ export default function Home() {
     }, []);
 
     function onSendMessage(message) {
-        const newMessage = {
-            data: message,
-            member: me,
-        };
-        setMessages([...messages, newMessage]);
+        drone.publish({
+            room: "observable-room",
+            message,
+        });
     }
     return (
         <>
