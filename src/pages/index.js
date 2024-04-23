@@ -218,7 +218,7 @@ export default function Home() {
                     content="width=device-width, initial-scale=1"
                 />
                 <link rel="icon" href="/favicon.ico" />
-                <scrip
+                <script
                     type="text/javascript"
                     src="https://cdn.scaledrone.com/scaledrone.min.js"
                 />
